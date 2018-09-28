@@ -1,0 +1,14 @@
+<ul>
+  {{#each found}}
+  	<li>
+  		<p><span class="label">Headline:</span> {{this.headline}}</p>
+      <p><span class="label">Summary:</span> {{this.summary}}</p>
+      <p><span class="label">Link:</span> {{this.link}}</p>
+
+      {{!-- <button data-id="{{this.id}}" class="delquote">Delete</button>
+      <button data-id="{{this.id}}" class="delquote">Comment</button>
+
+      <a href="/{{this.id}}">Update this quote</a> --}}
+  	</li>
+  {{/each}}
+</ul>
