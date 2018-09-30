@@ -4,8 +4,13 @@
 var express = require("express");
 var cheerio = require("cheerio");
 var request = require("request");
-var mongojs = require("mongojs")
+var mongojs = require("mongojs");
+var exphbs = require("express-handlebars");
 var app = express();
+app.engine("handlebars", exphbs({ defaultLayout: "main" }));
+app.set("view engine", "handlebars");
+app.use(express.static("public"));
+
 
 var databaseUrl = "scraper";
 var collections = ["scrapedData"]
@@ -14,18 +19,17 @@ db.on("error", function(error) {
   console.log("Database Error:", error);
 });
 
-app.get("/", function(req, res) {
-  res.send("Hello world");
-});
-
-app.get("/all", function(res, res) {
+app.get("/", function(res, res) {
   db.scrapedData.find({}, function(error, found) {
     if (error) {
       console.log(error);
     }
     else {
-      res.json(found);
+      res.render("index", {
+        found: found
+       });
     }
+
 })});
 
 // Make a request call to grab the HTML body from the site of your choice
@@ -56,7 +60,7 @@ app.get("/scrape", function (req, res) {
       db.scrapedData.insert({
       headline: title,
       summary: summary,
-      link: "http://www.chicagotribune.com/sports/baseball/cubs" + link
+      link: "http://www.chicagotribune.com" + link
       },
       function(err, inserted) {
         if (err) {
@@ -71,8 +75,30 @@ app.get("/scrape", function (req, res) {
     }
   });
 // Send a "Scrape Complete" message to the browser
-res.send("Scrape Complete Mother Fucker!");
+res.send("Scrape Complete!");
 });})
+
+app.get("/delete/:id", function(req, res) {
+  // Remove a note using the objectID
+  db.scrapedData.remove(
+    {
+      _id: mongojs.ObjectID(req.params.id)
+    },
+    function(error, removed) {
+      // Log any errors from mongojs
+      if (error) {
+        console.log(error);
+        res.send(error);
+      }
+      else {
+        // Otherwise, send the mongojs response to the browser
+        // This will fire off the success function of the ajax request
+        console.log(removed);
+        res.send(removed);
+      }
+    }
+  );
+});
 
 app.listen(3000, function() {
   console.log("App running on port 3000!");
