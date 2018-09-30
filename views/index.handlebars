@@ -14,13 +14,10 @@
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav">
       <li class="nav-item active">
-        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+        <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">Features</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Pricing</a>
+        <a class="nav-link" href="/drop">Drop</a>
       </li>
       <li class="nav-item">
           <a href="/scrape" class="btn btn-primary">Scrape!</a>
@@ -53,13 +50,13 @@
     <p class="card-text">With supporting text below as a natural lead-in to additional content.</p> --}}
     <a href={{this.link}} class="btn btn-primary">Read Full Article</a>
     <a href="#" class="btn btn-primary">Chat!</a>
-    <a id="delete" href="#" data-id={{this._id}} class="btn btn-primary">Delete</a>
+    <a id="delete" href="/delete/:_id" data-id={{this._id}} class="btn btn-primary">Delete</a>
   </div>
 </div><br>
   {{/each}}
 </ul>
 <script>
-    $.ajax("/all", {
+    $.ajax("/", {
       type: "GET",
       data: found
     }).then(
@@ -68,10 +65,33 @@
       }
     );
 
-    $("#delete").on("click", function(event) {
+    $.ajax("/scrape", {
+      type: "GET",
+      data: found
+    }).then(
+      function() {
+        location.reload();
+      }
+    );
+    $.ajax("/delete", {
+          type: "POST",
+          _id: this._id
+        }).then(
+          function() {
+            location.reload();
+          }
+        );
+
+    $("#delete").click(function(event) {
         var thisId = $(this).attr("data-id");
-        console.log(thisId);
-        });    
+           $.ajax("/delete/:_id", {
+          type: "GET",
+          _id: thisId
+        }).then(
+          function() {
+            location.reload();
+          }
+        );
 </script>
 <style>
 h6 {

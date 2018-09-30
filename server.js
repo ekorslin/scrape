@@ -1,6 +1,3 @@
-// Using this template, the cheerio documentation,
-// and what you've learned in class so far, scrape a website
-// of your choice, save information from the page in a result array, and log it to the console.
 var express = require("express");
 var cheerio = require("cheerio");
 var request = require("request");
@@ -35,69 +32,55 @@ app.get("/", function(res, res) {
 // Make a request call to grab the HTML body from the site of your choice
 app.get("/scrape", function (req, res) {
   request("http://www.chicagotribune.com/sports/baseball/cubs/", function(error, response, html) {
-
-  // Load the HTML into cheerio and save it to a variable
-  // '$' becomes a shorthand for cheerio's selector commands, much like jQuery's '$'
   var $ = cheerio.load(html);
-
-  // An empty array to save the data that we'll scrape
-  // var results = [];
-
-  // Select each element in the HTML body from which you want information.
-  // NOTE: Cheerio selectors function similarly to jQuery's selectors,
-  // but be sure to visit the package's npm page to see how it works
   $("section.trb_outfit_group_list_item_body").each(function(i, element) {
 
     var link = $(element).find("a").attr("href");
     var title = $(element).find("h3").text();
     var summary = $(element).find("p").text();
-    // console.log(title);
-    // console.log(link);
-
-    // Save these results in an object that we'll push into the results array we defined earlier
-    // results.push({
     if (title && summary && link) {
       db.scrapedData.insert({
       headline: title,
       summary: summary,
       link: "http://www.chicagotribune.com" + link
-      },
-      function(err, inserted) {
+      })}}),
+      function(err, found) {
         if (err) {
           // Log the error if one is encountered during the query
           console.log(err);
         }
         else {
-          // Otherwise, log the inserted data
-          console.log(inserted);
-        }
-      });
-    }
-  });
-// Send a "Scrape Complete" message to the browser
-res.send("Scrape Complete!");
-});})
+          res.redirect("/");
+        }}})});
 
-app.get("/delete/:id", function(req, res) {
+      app.get('/delete/:_id', function(req, res){
+        console.log(req.params.thisId)
+        db.scrapedData.remove({'_id': req.params.thisId}),
+        function(err, data) {
+          if(err){
+            console.log(err);
+          } else {
+            console.log("Comment deleted");
+            res.redirect('/');
+          }}});  
+        
+      
+     
+
+app.get("/drop", function(req, res) {
   // Remove a note using the objectID
-  db.scrapedData.remove(
-    {
-      _id: mongojs.ObjectID(req.params.id)
-    },
-    function(error, removed) {
+  db.scrapedData.drop(function(error, removed) {
       // Log any errors from mongojs
       if (error) {
         console.log(error);
         res.send(error);
       }
       else {
-        // Otherwise, send the mongojs response to the browser
-        // This will fire off the success function of the ajax request
-        console.log(removed);
-        res.send(removed);
+        {
+          res.render("index", removed);
       }
     }
-  );
+  });
 });
 
 app.listen(3000, function() {
