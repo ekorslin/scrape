@@ -66,7 +66,7 @@ app.get("/scrape", function (req, res) {
           if(err){
             console.log(err);
           } else {
-            console.log("Comment deleted");
+            console.log("Article Deleted!");
           }
             // res.redirect("/");
           })});  
