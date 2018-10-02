@@ -1,3 +1,4 @@
+var bodyParser = require("body-parser");
 var express = require("express");
 var cheerio = require("cheerio");
 var request = require("request");
@@ -7,7 +8,7 @@ var app = express();
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 app.use(express.static("public"));
-
+app.use(bodyParser.urlencoded({ extended: true }));
 
 var databaseUrl = "scraper";
 var collections = ["scrapedData"]
@@ -39,30 +40,36 @@ app.get("/scrape", function (req, res) {
     var title = $(element).find("h3").text();
     var summary = $(element).find("p").text();
     if (title && summary && link) {
-      db.scrapedData.insert({
-      headline: title,
-      summary: summary,
-      link: "http://www.chicagotribune.com" + link
-      })}}),
+        db.scrapedData.insert({
+        headline: title,
+        summary: summary,
+        link: "http://www.chicagotribune.com" + link
+        }
+      )}
+    }),
       function(err, found) {
         if (err) {
           // Log the error if one is encountered during the query
           console.log(err);
         }
         else {
-          res.redirect("/");
+          res.render("index", {
+            found: found
+          });
+          console.log(found);
         }}})});
 
-      app.get('/delete/:_id', function(req, res){
-        console.log(req.params.thisId)
-        db.scrapedData.remove({'_id': req.params.thisId}),
+      app.post('/delete', function(req, res){
+        console.log(JSON.stringify(req.body.thisId));
+        db.scrapedData.remove({"_id": JSON.stringify(req.body.thisId)},
         function(err, data) {
           if(err){
             console.log(err);
           } else {
             console.log("Comment deleted");
-            res.redirect('/');
-          }}});  
+          }
+            // res.redirect("/");
+          })});  
         
       
      

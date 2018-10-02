@@ -1,4 +1,3 @@
-  <body>
   {{!-- <h5>Chicago Cubs -- Today's Talk</h5> --}}
 <!-- Image and text -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -20,7 +19,7 @@
         <a class="nav-link" href="/drop">Drop</a>
       </li>
       <li class="nav-item">
-          <a href="/scrape" class="btn btn-primary">Scrape!</a>
+          <a href="/scrape" class="btn btn-primary scrape-btn">Scrape!</a>
       </li>
     </ul>
   </div>
@@ -37,8 +36,9 @@
         <div class="carousel-caption d-none d-md-block">
         <h5>Talk of the Town!</h5>
         <h6>Check out and chat on the latest headlines from your favorite MLB team thanks to the Chicago Tribune.</h6>
-    </div>
+        </div>
     </div><br>
+    </div>
 <ul>
   {{#each found}}
 <div class="card">
@@ -49,49 +49,57 @@
     {{!-- <h5 class="card-title">Special title treatment</h5>
     <p class="card-text">With supporting text below as a natural lead-in to additional content.</p> --}}
     <a href={{this.link}} class="btn btn-primary">Read Full Article</a>
-    <a href="#" class="btn btn-primary">Chat!</a>
-    <a id="delete" href="/delete/:_id" data-id={{this._id}} class="btn btn-primary">Delete</a>
+    <button type="button" class="btn btn-primary chat-btn" data-toggle="modal" data-target=".bd-example-modal-lg">Chat!</button>
+  {{!-- modal html --}}
+    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+        ...
+        </div>
+      </div>
+    </div>    
+    <button type="button" data-id={{this._id}} class="btn btn-primary delete-button">Delete</button>
+
   </div>
-</div><br>
+<br>
   {{/each}}
 </ul>
+
+
+
 <script>
+   $(".delete-button").click(function(event) {
+        var thisId = $(this).attr("data-id");
+           $.ajax("/delete", {
+          method: "POST",
+          data: { thisId: thisId }
+        }).then(
+          function() {
+          }
+        )});
+
     $.ajax("/", {
       type: "GET",
       data: found
     }).then(
       function() {
-        location.reload();
+        {{!-- location.reload(); --}}
       }
     );
 
+ $(".scrape-btn").click(function(event) {
+    event.preventDefault();
     $.ajax("/scrape", {
       type: "GET",
       data: found
-    }).then(
-      function() {
-        location.reload();
-      }
-    );
-    $.ajax("/delete", {
-          type: "POST",
-          _id: this._id
-        }).then(
-          function() {
-            location.reload();
-          }
-        );
+    }).then(function() {
+        console.log(found);
+  })
+});
 
-    $("#delete").click(function(event) {
-        var thisId = $(this).attr("data-id");
-           $.ajax("/delete/:_id", {
-          type: "GET",
-          _id: thisId
-        }).then(
-          function() {
-            location.reload();
-          }
-        );
+
+
+   
 </script>
 <style>
 h6 {
@@ -109,4 +117,4 @@ h4 {
   color: black;
 };
 </style>
-</body>
+
