@@ -58,7 +58,7 @@
         </div>
       </div>
     </div>    
-    <button type="button" data-id={{this._id}} class="btn btn-primary delete-button">Delete</button>
+    <button type="button" href="/delete" data-id={{this._id}} class="btn btn-primary delete-button">Delete</button>
 
   </div>
 <br>
@@ -74,9 +74,10 @@
           method: "POST",
           data: { thisId: thisId }
         }).then(
-          function() {
-          }
-        )});
+          setTimeout(function() {
+            location.reload();
+          }, .1000));
+        });
 
     $.ajax("/", {
       type: "GET",

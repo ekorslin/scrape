@@ -61,15 +61,15 @@ app.get("/scrape", function (req, res) {
 
       app.post('/delete', function(req, res){
         console.log(JSON.stringify(req.body.thisId));
-        db.scrapedData.remove({"_id": JSON.stringify(req.body.thisId)},
-        function(err, data) {
+        db.scrapedData.remove({"_id": db.ObjectId(req.body.thisId)},
+        function(err, ) {
           if(err){
             console.log(err);
           } else {
             console.log("Article Deleted!");
           }
             // res.redirect("/");
-          })});  
+        })}); 
         
       
      
