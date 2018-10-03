@@ -27,8 +27,7 @@ app.get("/", function(res, res) {
         found: found
        });
     }
-
-})});
+  })});
 
 // Make a request call to grab the HTML body from the site of your choice
 app.get("/scrape", function (req, res) {
@@ -57,7 +56,9 @@ app.get("/scrape", function (req, res) {
             found: found
           });
           console.log(found);
-        }}})});
+        }
+          res.send("Scrape Complete");
+        }})});
 
       app.post('/delete', function(req, res){
         console.log(JSON.stringify(req.body.thisId));
@@ -71,7 +72,17 @@ app.get("/scrape", function (req, res) {
             // res.redirect("/");
         })}); 
         
-      
+        app.post('/comments', function(req, res){
+          console.log(req.body.chatId);
+          db.scrapedData.find({"_id": db.ObjectId(req.body.chatId)},
+          function(err, document) {
+            if(err){
+              console.log(err);
+            } else {
+              console.log("Found article Document!");
+              console.log(document)
+            }
+          })}); 
      
 
 app.get("/drop", function(req, res) {

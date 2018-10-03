@@ -1,4 +1,60 @@
-  {{!-- <h5>Chicago Cubs -- Today's Talk</h5> --}}
+<style>
+h6 {
+    text-shadow: 1px 1px 2px black, 0 0 25px black, 0 0 5px black;
+    font-family: Trebuchet MS, Helvetica, sans-serif;
+    font-size: 17px;
+}
+h5 {
+    text-shadow: 2px 2px 8px black;
+    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+    font-size: 60px;
+}
+h4 {
+  font-family: 'Times New Roman', Times, serif;
+  color: black;
+};
+
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
+</style>  
+
+{{!-- <h5>Chicago Cubs -- Today's Talk</h5> --}}
 <!-- Image and text -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <a class="navbar-brand" href="http://www.chicagotribune.com/sports/baseball/cubs/">
@@ -25,11 +81,6 @@
   </div>
 </nav>
   <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-  <ol class="carousel-indicators">
-    <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-    <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-    <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
-  </ol>
   <div class="carousel-inner">
     <div class="carousel-item active">
       <img class="d-block w-100" src="./assets/madden.jpg" alt="First slide">
@@ -49,15 +100,38 @@
     {{!-- <h5 class="card-title">Special title treatment</h5>
     <p class="card-text">With supporting text below as a natural lead-in to additional content.</p> --}}
     <a href={{this.link}} class="btn btn-primary">Read Full Article</a>
-    <button type="button" class="btn btn-primary chat-btn" data-toggle="modal" data-target=".bd-example-modal-lg">Chat!</button>
-  {{!-- modal html --}}
-    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    
+<!-- Trigger/Open The Modal -->
+<button id="myBtn"></button>
+
+<!-- The Modal -->
+<div id="myModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h4>{{this.headline}}</h4>
+    Share your thoughts w/ Chicago!
+    <form>
+      First name:<br>
+      <input type="text" name="firstname"><br>
+      Comment:<br>
+      <textarea name="comment" rows="10" columns="30"></textarea>
+      </form>
+    <button type="button" href="/delete" data-id={{this._id}} class="btn btn-primary delete-button">Send</button>
+  </div>
+
+</div>
+
+
+  {{!-- <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
         ...
         </div>
       </div>
-    </div>    
+    </div>   --}}
+    <a data-id={{this._id}} class="btn btn-primary chat-button">Chat!</a>
     <button type="button" href="/delete" data-id={{this._id}} class="btn btn-primary delete-button">Delete</button>
 
   </div>
@@ -68,9 +142,49 @@
 
 
 <script>
+// Get the modal
+var modal = document.getElementById('myModal');
+
+// Get the button that opens the modal
+var btn = document.getElementById("myBtn");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks on the button, open the modal 
+btn.onclick = function() {
+    modal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+    modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+
+ $(".chat-button").click(function(event) {
+         var modal = document.getElementById('myModal');
+          modal.style.display = "block";
+    event.preventDefault();
+        var chatId = $(this).attr("data-id");
+        $.ajax("/comments", {
+          method: "POST",
+          data: { chatId: chatId }
+        }).then(function() {
+          var modal = document.getElementById('myModal');
+          modal.style.display = "block";
+        }
+        )});
+
    $(".delete-button").click(function(event) {
         var thisId = $(this).attr("data-id");
-           $.ajax("/delete", {
+        $.ajax("/delete", {
           method: "POST",
           data: { thisId: thisId }
         }).then(
@@ -91,31 +205,9 @@
  $(".scrape-btn").click(function(event) {
     event.preventDefault();
     $.ajax("/scrape", {
-      type: "GET",
+      method: "GET",
       data: found
     }).then(function() {
-        console.log(found);
-  })
-});
-
-
-
-   
+})
+});   
 </script>
-<style>
-h6 {
-    text-shadow: 1px 1px 2px black, 0 0 25px black, 0 0 5px black;
-    font-family: Trebuchet MS, Helvetica, sans-serif;
-    font-size: 17px;
-}
-h5 {
-    text-shadow: 2px 2px 8px black;
-    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
-    font-size: 60px;
-}
-h4 {
-  font-family: 'Times New Roman', Times, serif;
-  color: black;
-};
-</style>
-
