@@ -101,6 +101,13 @@ app.get("/drop", function(req, res) {
   });
 });
 
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
+
+// Set mongoose to leverage built in JavaScript ES6 Promises
+// Connect to the Mongo DB
+mongojs.Promise = Promise;
+mongojs.connect(MONGODB_URI);
+
 app.listen(3000, function() {
   console.log("App running on port 3000!");
 });
