@@ -3,6 +3,7 @@ var express = require("express");
 var cheerio = require("cheerio");
 var request = require("request");
 var mongojs = require("mongojs");
+var mongoose = require("mongoose");
 var exphbs = require("express-handlebars");
 var app = express();
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
@@ -98,9 +99,9 @@ app.get("/drop", function(req, res) {
 
 var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
 
-mongojs.Promise = Promise;
-mongojs.connect(MONGODB_URI);
+mongoose.Promise = Promise;
+mongoose.connect(MONGODB_URI);
 
-// app.listen(3000, function() {
-//   console.log("App running on port 3000!");
-// });
+app.listen(3000, function() {
+  console.log("App running on port 3000!");
+});
