@@ -96,10 +96,10 @@ app.get("/drop", function(req, res) {
   });
 });
 
-// var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
 
-// mongojs.Promise = Promise;
-// mongojs.connect(MONGODB_URI);
+mongojs.Promise = Promise;
+mongojs.connect(MONGODB_URI);
 
 app.listen(3000, function() {
   console.log("App running on port 3000!");
