@@ -207,7 +207,8 @@ window.onclick = function(event) {
     $.ajax("/scrape", {
       method: "GET",
       data: found
-    }).then(function() {
-})
+    }).then(setTimeout(function() {
+      res.redirect('/');
+      }, .1000)); 
 });   
 </script>
