@@ -23,7 +23,7 @@ db.on("error", function(error) {
 });
 
 
-var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://heroku_l2mpc36m:k8eou0v4g78bekaaaeqs44deb9@ds157549.mlab.com:57549/heroku_l2mpc36m";
 
 mongoose.Promise = Promise;
 mongoose.connect(MONGODB_URI);
@@ -91,7 +91,7 @@ app.get("/scrape", function (req, res) {
           })}); 
      
 
-app.get("/drop", function(req, res) {
+app.get("/drop/", function(req, res) {
   // Remove a note using the objectID
   db.scrapedData.drop(function(error, removed) {
       // Log any errors from mongojs
