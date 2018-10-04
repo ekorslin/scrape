@@ -18,6 +18,11 @@ db.on("error", function(error) {
   console.log("Database Error:", error);
 });
 
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://heroku_6zt1trbj:u6l3fot5u2bv764nrsm03nd6m2@ds123003.mlab.com:23003/heroku_6zt1trbj";
+
+mongoose.Promise = Promise;
+mongoose.connect(MONGODB_URI);
+
 app.get("/", function(res, res) {
   db.scrapedData.find({}, function(error, found) {
     if (error) {
@@ -97,11 +102,6 @@ app.get("/drop", function(req, res) {
   });
 });
 
-var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
-
-mongoose.Promise = Promise;
-mongoose.connect(MONGODB_URI);
-
-app.listen(3000, function() {
-  console.log("App running on port 3000!");
-});
+// app.listen(3000, function() {
+//   console.log("App running on port 3000!");
+// });
