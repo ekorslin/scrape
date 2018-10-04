@@ -22,6 +22,12 @@ db.on("error", function(error) {
   console.log("Database Error:", error);
 });
 
+
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
+
+mongoose.Promise = Promise;
+mongoose.connect(MONGODB_URI);
+
 app.get("/", function(res, res) {
   db.scrapedData.find({}, function(error, found) {
     if (error) {
@@ -101,10 +107,6 @@ app.get("/drop", function(req, res) {
   });
 });
 
-var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
-
-mongoose.Promise = Promise;
-mongoose.connect(MONGODB_URI);
 
 app.listen(3000, function() {
   console.log("App running on port 3000!");
