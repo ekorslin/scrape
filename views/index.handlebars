@@ -174,7 +174,7 @@ window.onclick = function(event) {
     event.preventDefault();
         var chatId = $(this).attr("data-id");
         $.ajax("/comments", {
-          method: "POST",
+          type: "POST",
           data: { chatId: chatId }
         }).then(function() {
           var modal = document.getElementById('myModal');
@@ -185,7 +185,7 @@ window.onclick = function(event) {
    $(".delete-button").click(function(event) {
         var thisId = $(this).attr("data-id");
         $.ajax("/delete", {
-          method: "POST",
+          type: "POST",
           data: { thisId: thisId }
         }).then(
           setTimeout(function() {
@@ -205,7 +205,7 @@ window.onclick = function(event) {
  $(".scrape-btn").click(function(event) {
     event.preventDefault();
     $.ajax("/scrape", {
-      method: "GET",
+      type: "GET",
       data: found
     }).then(setTimeout(function() {
       res.redirect('/');
