@@ -1,68 +1,8 @@
-<style>
-h6 {
-    text-shadow: 1px 1px 2px black, 0 0 25px black, 0 0 5px black;
-    font-family: Trebuchet MS, Helvetica, sans-serif;
-    font-size: 17px;
-}
-h5 {
-    text-shadow: 2px 2px 8px black;
-    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
-    font-size: 60px;
-}
-h4 {
-  font-family: 'Times New Roman', Times, serif;
-  color: black;
-};
-
-.modal {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
-    left: 0;
-    top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0,0,0); /* Fallback color */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-}
-
-/* Modal Content/Box */
-.modal-content {
-    background-color: #fefefe;
-    margin: 15% auto; /* 15% from the top and centered */
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%; /* Could be more or less, depending on screen size */
-}
-
-/* The Close Button */
-.close {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
-}
-
-
-</style>  
-
-{{!-- <h5>Chicago Cubs -- Today's Talk</h5> --}}
-<!-- Image and text -->
+<!-- NavBar -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <a class="navbar-brand" href="http://www.chicagotribune.com/sports/baseball/cubs/">
-    <img src="./assets/tribune.png" width="40" height="40" alt="">
+    <img src="./assets/images/tribune.png" width="40" height="40" alt="">
   </a>
-
-
-  {{!-- <a class="navbar-brand" href="#">Cub Talk!</a> --}}
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -80,34 +20,33 @@ h4 {
     </ul>
   </div>
 </nav>
+{{!-- Main Carousel Image --}}
   <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
   <div class="carousel-inner">
     <div class="carousel-item active">
-      <img class="d-block w-100" src="./assets/madden.jpg" alt="First slide">
+      <img class="d-block w-100" src="./assets/images/madden.jpg" alt="First slide">
         <div class="carousel-caption d-none d-md-block">
         <h5>Talk of the Town!</h5>
         <h6>Check out and chat on the latest headlines from your favorite MLB team thanks to the Chicago Tribune.</h6>
         </div>
     </div><br>
     </div>
+
+{{!-- DIV to create card for each article stored --}}
+
 <ul>
   {{#each found}}
 <div class="card">
+  <img class="card-img-top" src="{{this.image}}" />
   <h4 class="card-header"><span class="label"></span> {{this.headline}}</h4>
-  {{!-- <h5 class="card-header">Featured</h5> --}}
   <div class="card-body">
     <p class="card-text"><span class="label"></span> {{this.summary}}</p>
-    {{!-- <h5 class="card-title">Special title treatment</h5>
-    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p> --}}
     <a href={{this.link}} class="btn btn-primary">Read Full Article</a>
-    
-<!-- Trigger/Open The Modal -->
-<button id="myBtn"></button>
+    <a data-id={{this._id}}><button id="myBtn" class="btn btn-primary chat-button">Chat!</button></a>
+    <button type="button" href="/delete" data-id={{this._id}} class="btn btn-primary delete-button">Delete</button>
 
 <!-- The Modal -->
 <div id="myModal" class="modal">
-
-  <!-- Modal content -->
   <div class="modal-content">
     <span class="close">&times;</span>
     <h4>{{this.headline}}</h4>
@@ -116,27 +55,16 @@ h4 {
       First name:<br>
       <input type="text" name="firstname"><br>
       Comment:<br>
-      <textarea name="comment" rows="10" columns="30"></textarea>
+
+      <textarea name="comment" rows="10" columns="2000"></textarea>
       </form>
     <button type="button" href="/delete" data-id={{this._id}} class="btn btn-primary delete-button">Send</button>
   </div>
-
 </div>
-
-
-  {{!-- <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-        ...
-        </div>
-      </div>
-    </div>   --}}
-    <a data-id={{this._id}} class="btn btn-primary chat-button">Chat!</a>
-    <button type="button" href="/delete" data-id={{this._id}} class="btn btn-primary delete-button">Delete</button>
-
   </div>
 <br>
   {{/each}}
+  </div>
 </ul>
 
 

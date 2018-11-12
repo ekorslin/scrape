@@ -39,16 +39,18 @@ app.get("/", function(res, res) {
 app.get("/scrape", function (req, res) {
   request("http://www.chicagotribune.com/sports/baseball/cubs/", function(error, response, html) {
   var $ = cheerio.load(html);
+  // $("section.trb_outfit_group_list_item").each(function(i, element) {
   $("section.trb_outfit_group_list_item_body").each(function(i, element) {
-
     var link = $(element).find("a").attr("href");
     var title = $(element).find("h3").text();
     var summary = $(element).find("p").text();
+    var image = $(element).find("a").find("img").attr("src");
     if (title && summary && link) {
         db.scrapedData.insert({
         headline: title,
         summary: summary,
-        link: "http://www.chicagotribune.com" + link
+        link: "http://www.chicagotribune.com" + link,
+        image: image
         }
       )}
     }),
