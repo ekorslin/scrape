@@ -42,7 +42,7 @@
   <div class="card-body">
     <p class="card-text"><span class="label"></span> {{this.summary}}</p>
     <a href={{this.link}} class="btn btn-primary">Read Full Article</a>
-    <a data-id={{this._id}}><button id="myBtn" class="btn btn-primary chat-button">Chat!</button></a>
+    <button id="myBtn" data-id={{this._id}} class="btn btn-primary chat-button">Chat!</button>
     <button type="button" href="/delete" data-id={{this._id}} class="btn btn-primary delete-button">Delete</button>
 
 <!-- The Modal -->
@@ -104,11 +104,13 @@ window.onclick = function(event) {
         $.ajax("/comments", {
           type: "POST",
           data: { chatId: chatId }
-        }).then(function() {
-          var modal = document.getElementById('myModal');
-          modal.style.display = "block";
-        }
-        )});
+              }).then(function (response) {
+              {{!-- var modal = document.getElementById('myModal');
+              modal.style.display = "block"; --}}
+                console.log(JSON.stringify(response));
+    }).catch(function (error) {
+        console.log("Something's not working");
+    })});
 
    $(".delete-button").click(function(event) {
         var thisId = $(this).attr("data-id");

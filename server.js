@@ -78,12 +78,12 @@ app.get("/scrape", function (req, res) {
         app.post('/comments', function(req, res){
           console.log(req.body.chatId);
           db.scrapedData.find({"_id": db.ObjectId(req.body.chatId)},
-          function(err, document) {
+          function(err, response) {
             if(err){
               console.log(err);
-            } else {
+            } else {  
               console.log("Found article Document!");
-              console.log(document)
+              res.send(response);
             }
           })}); 
      
