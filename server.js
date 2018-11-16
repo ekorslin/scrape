@@ -10,18 +10,13 @@ app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
-
 var databaseUrl = "mongodb://heroku_6zt1trbj:u6l3fot5u2bv764nrsm03nd6m2@ds123003.mlab.com:23003/heroku_6zt1trbj";
-var collections = ["scrapedData"]
+var collections = ["scrapedData", "comments"]
 var db = mongojs(databaseUrl, collections);
 db.on("error", function(error) {
   console.log("Database Error:", error);
 });
 
-// var MONGODB_URI = process.env.MONGODB_URI || "mongodb://heroku_6zt1trbj:u6l3fot5u2bv764nrsm03nd6m2@ds123003.mlab.com:23003/heroku_6zt1trbj";
-
-// mongoose.Promise = Promise;
-// mongoose.connect(MONGODB_URI);
 
 app.get("/", function(res, res) {
   db.scrapedData.find({}, function(error, found) {
@@ -44,13 +39,11 @@ app.get("/scrape", function (req, res) {
     var link = $(element).find("a").attr("href");
     var title = $(element).find("h3").text();
     var summary = $(element).find("p").text();
-    var image = $(element).find("a").find("img").attr("src");
     if (title && summary && link) {
         db.scrapedData.insert({
         headline: title,
         summary: summary,
         link: "http://www.chicagotribune.com" + link,
-        image: image
         }
       )}
     }),
@@ -75,17 +68,32 @@ app.get("/scrape", function (req, res) {
             // res.redirect("/");
         })}); 
         
-        app.post('/comments', function(req, res){
-          console.log(req.body.chatId);
+        app.post("/comments", function(req, res){
+          console.log("Chat ID: " + req.body.chatId);
           db.scrapedData.find({"_id": db.ObjectId(req.body.chatId)},
           function(err, response) {
             if(err){
               console.log(err);
             } else {  
               console.log("Found article Document!");
+              console.log(response);
               res.send(response);
             }
           })}); 
+
+          app.post("/post", function(req, res) {
+            console.log("Chat ID: " + req.body.message);
+            db.comments.insertOne({
+              articleId: req.body._Id,
+              name: req.body.chatId,
+              message: req.body.message
+            }),function(err, response) {
+              if(err) {
+                console.log(err); 
+              } else {
+                console.log("What the fuck?");
+              }
+            }}); 
      
 
 app.get("/drop", function(req, res) {

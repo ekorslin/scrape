@@ -56,9 +56,9 @@
       <input type="text" name="firstname"><br>
       Comment:<br>
 
-      <textarea name="comment" rows="10" columns="2"></textarea>
+      <textarea class="post" name="comment" rows="10" columns="2"></textarea>
       </form>
-    <button type="button" href="/delete" data-id={{this._id}} class="btn btn-primary delete-button">Send</button>
+    <button type="button" href="/submit" data-id={{this._id}} class="btn btn-primary submit-button">Submit</button>
   </div>
 </div>
   </div>
@@ -104,13 +104,29 @@ window.onclick = function(event) {
         $.ajax("/comments", {
           type: "POST",
           data: { chatId: chatId }
-              }).then(function (response) {
+    }).then(function (response) {
               $('#modal-headline').html(response[0].headline);
+              $('#modal-headline').attr("value", response[0]._id);
               var modal = document.getElementById('myModal');
               modal.style.display = "block";
               console.log(JSON.stringify(response));
     }).catch(function (error) {
         console.log("Something's not working");
+    })});
+
+    $(".submit-button").click(function(event) {
+      event.preventDefault();
+      $.ajax("/post", {
+        type: "POST",
+        data: {
+          name: $("input[type=text][name=firstname]" ).val(),
+          message: $(".post").val(),
+          articleId: $("#modal-headline").attr("value"),
+        }
+        }).then(function (response) {
+          console.log(response);
+        }).catch(function (error) {
+          console.log(message);
     })});
 
    $(".delete-button").click(function(event) {
