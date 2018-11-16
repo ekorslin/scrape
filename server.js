@@ -84,8 +84,8 @@ app.get("/scrape", function (req, res) {
             let { body } = req;
             db.comments.insert({
               articleId: body.articleId,
-              name: article.name,
-              message: article.message
+              name: body.name,
+              message: body.message
             }),function(err, response) {
               if(err) {
                 console.log(err); 
