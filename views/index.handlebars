@@ -56,7 +56,7 @@
       <input type="text" name="firstname"><br>
       Comment:<br>
 
-      <textarea name="comment" rows="10" columns="2000"></textarea>
+      <textarea name="comment" rows="10" columns="2"></textarea>
       </form>
     <button type="button" href="/delete" data-id={{this._id}} class="btn btn-primary delete-button">Send</button>
   </div>
@@ -105,11 +105,10 @@ window.onclick = function(event) {
           type: "POST",
           data: { chatId: chatId }
               }).then(function (response) {
-              {{!-- var modal = document.getElementById('myModal');
-              modal.style.display = "block"; --}}
               $('#modal-headline').html(response[0].headline);
-
-                console.log(JSON.stringify(response));
+              var modal = document.getElementById('myModal');
+              modal.style.display = "block";
+              console.log(JSON.stringify(response));
     }).catch(function (error) {
         console.log("Something's not working");
     })});
