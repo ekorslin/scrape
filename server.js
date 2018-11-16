@@ -3,7 +3,6 @@ var express = require("express");
 var cheerio = require("cheerio");
 var request = require("request");
 var mongojs = require("mongojs");
-var mongoose = require("mongoose");
 var exphbs = require("express-handlebars");
 var app = express();
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
@@ -11,7 +10,7 @@ app.set("view engine", "handlebars");
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
 var databaseUrl = "mongodb://heroku_6zt1trbj:u6l3fot5u2bv764nrsm03nd6m2@ds123003.mlab.com:23003/heroku_6zt1trbj";
-var collections = ["scrapedData", "comments"]
+var collections = ["scrapedData", "comments"];
 var db = mongojs(databaseUrl, collections);
 db.on("error", function(error) {
   console.log("Database Error:", error);
@@ -82,16 +81,16 @@ app.get("/scrape", function (req, res) {
           })}); 
 
           app.post("/post", function(req, res) {
-            console.log("Chat ID: " + req.body.message);
-            db.comments.insertOne({
-              articleId: req.body._Id,
-              name: req.body.chatId,
-              message: req.body.message
+            let { body } = req;
+            db.comments.insert({
+              articleId: body.articleId,
+              name: article.name,
+              message: article.message
             }),function(err, response) {
               if(err) {
                 console.log(err); 
               } else {
-                console.log("What the fuck?");
+                console.log("What the heck?");
               }
             }}); 
      
