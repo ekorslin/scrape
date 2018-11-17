@@ -68,29 +68,17 @@ app.get("/scrape", function (req, res) {
         })}); 
         
         app.post("/comments", function(req, res){
-          console.log("Article ID: " + req.body.chatId);
-          db.comments.find({"articleId": db.ObjectId(req.body.chatId)}).forEach(
-            function(err, object) {
-              // mongoData = db.scrapedData.find({"articleId": req.body.chatId })});
-            if(err) {
+          console.log("Chat ID: " + req.body.chatId);
+          db.scrapedData.find({"_id": db.ObjectId(req.body.chatId)},
+          function(err, response) {
+            if(err){
               console.log(err);
             } else {  
-              console.log("Found article Comments");
-              console.log(object);
-              res.send(object);
+              console.log("Found article Document!");
+              console.log(response);
+              res.send(response);
             }
           })}); 
-
-          // db.users.find().forEach(
-          //   function (object) {
-          //       var commonInBoth=db.comments.findOne({ "uid": object.uid} );
-          //       if (commonInBoth != null) {
-          //           printjson(commonInBoth) ;
-          //           printjson(object) ;
-          //       }else {
-          //           did not match so we don't care in this case
-          //       }
-          //   });
 
           app.post("/post", function(req, res) {
             let { body } = req;
@@ -102,7 +90,7 @@ app.get("/scrape", function (req, res) {
               if(err) {
                 console.log(err); 
               } else {
-                res.send(response);
+                res.send("What the heck?");
               }
             }}); 
      
