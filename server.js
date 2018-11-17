@@ -69,16 +69,33 @@ app.get("/scrape", function (req, res) {
         
         app.post("/comments", function(req, res){
           console.log("Chat ID: " + req.body.chatId);
-          db.scrapedData.find({"_id": db.ObjectId(req.body.chatId)},
-          function(err, response) {
-            if(err){
-              console.log(err);
-            } else {  
-              console.log("Found article Document!");
-              console.log(response);
-              res.send(response);
-            }
-          })}); 
+          db.getCollection('comments').aggregate([
+            {$match : {"articleId" : req.body.chatId}},
+            {$lookup: {from: "scrapedData",localField: "_id",foreignField: "articleId",as: "posts"}},
+            {$project : {
+                    posts : { $filter : {input : "$posts"  , as : "post", cond : { $eq : ['$$scrapedData._id' , req.body.chatId] } } },
+                    articleId : req.body.chatId
+              }}]),function(err, response) {
+                  if(err){
+                    console.log(err);
+                  } else {  
+                    console.log("Found article Document!");
+                    console.log(response);
+                    res.send(response);
+                  }
+                }});
+        // app.post("/comments", function(req, res){
+        //   console.log("Chat ID: " + req.body.chatId);
+        //   db.scrapedData.find({"_id": db.ObjectId(req.body.chatId)},
+        //   function(err, response) {
+        //     if(err){
+        //       console.log(err);
+        //     } else {  
+        //       console.log("Found article Document!");
+        //       console.log(response);
+        //       res.send(response);
+        //     }
+        //   })}); 
 
           app.post("/post", function(req, res) {
             let { body } = req;
