@@ -56,10 +56,10 @@
     </div>
     <form>
       First name:<br>
-      <input type="text" name="firstname"><br>
+      <input type="text" id="firstname" name="firstname"><br>
       Comment:<br>
 
-      <textarea class="post" name="comment" rows="2" columns="2"></textarea>
+      <textarea class="post" id="comment" name="comment" rows="2" columns="2"></textarea>
       </form>
     <button type="button" href="/submit" data-id={{this._id}} class="btn btn-primary submit-button">Submit</button>
   </div>
@@ -102,18 +102,22 @@ window.onclick = function(event) {
  $(".chat-button").click(function(event) {
          var modal = document.getElementById('myModal');
           modal.style.display = "block";
+          $(".commentList").empty();
     event.preventDefault();
         var chatId = $(this).attr("data-id");
         $.ajax("/comments", {
           type: "POST",
           data: { chatId: chatId }
     }).then(function (response) {
-              $(".commentList").append("<li>" + "How are you?" + "</li>");
               $('#modal-headline').html(response[0].headline);
               $('#modal-headline').attr("value", response[0]._id);
+              var i;
+              for (i = 0; i < response[0].comments.length; i++) {
+                $(".commentList").append("<li>" + response[0].comments[i].name + ": " + response[0].comments[i].message +"</li>" )
+              };
               var modal = document.getElementById('myModal');
               modal.style.display = "block";
-              console.log(JSON.stringify(response));
+              console.log(response[0].headline);
     }).catch(function (error) {
         console.log("Something's not working");
     })});
