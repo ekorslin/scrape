@@ -41,7 +41,7 @@
   <h4 class="card-header"><span class="label">{{this.headline}}</span></h4>
   <div class="card-body">
     <p class="card-text"><span class="label"></span> {{this.summary}}</p>
-    <a href={{this.link}} class="btn btn-primary">Read Full Article</a>
+    <a href={{this.link}} target="_blank" class="btn btn-primary">Read Full Article</a>
     <button id="myBtn" data-id={{this._id}} class="btn btn-primary chat-button">Chat!</button>
     <button type="button" href="/delete" data-id={{this._id}} class="btn btn-primary delete-button">Delete</button>
 
@@ -54,9 +54,9 @@
     <div class="card">
     <ul class="commentList"></ul>
     </div>
-    <form>
+    <form id="modal-form">
       First name:<br>
-      <input type="text" id="firstname" name="firstname"><br>
+      <input type="text" id="firstname" class="firstname" name="firstname"><br>
       Comment:<br>
 
       <textarea class="post" id="comment" name="comment" rows="2" columns="2"></textarea>
@@ -117,7 +117,7 @@ window.onclick = function(event) {
               };
               var modal = document.getElementById('myModal');
               modal.style.display = "block";
-              console.log(response[0].headline);
+              console.log("Modal should now be appearing in browser");
     }).catch(function (error) {
         console.log("Something's not working");
     })});
@@ -130,9 +130,13 @@ window.onclick = function(event) {
           name: $("input[type=text][name=firstname]" ).val(),
           message: $(".post").val(),
           articleId: $("#modal-headline").attr("value"),
-        }
-        }).then(function (response) {
-          console.log(response[0]);
+          complete: function(){
+            $("#firstname").val('');
+            $("#comment").val('');              
+            }
+        }}).then(function (response) {
+          getComments();
+          console.log(response);
         }).catch(function (error) {
           console.log(error);
     })});
@@ -165,5 +169,26 @@ window.onclick = function(event) {
     }).then(setTimeout(function() {
       res.redirect('/');
       }, .1000)); 
-});   
+}); 
+
+function getComments (event) {
+        console.log("Get Comments function triggered!");
+        $(".commentList").empty();
+        $.ajax("/updateComments", {
+        type: "GET",
+        data: {
+          articleId: $("#modal-headline").attr("value"),
+        }}).then(function (response) {
+              $('#modal-headline').html(response[0].headline);
+              $('#modal-headline').attr("value", response[0]._id);
+              var i;
+              for (i = 0; i < response[0].comments.length; i++) {
+                $(".commentList").append("<li>" + response[0].comments[i].name + ": " + response[0].comments[i].message +"</li>" )
+              };
+              var modal = document.getElementById('myModal');
+              modal.style.display = "block";
+          console.log(response);
+        }).catch(function (error) {
+          console.log(error);
+    })};
 </script>

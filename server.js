@@ -9,8 +9,8 @@ app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
-// var databaseUrl = 'mongodb://localhost:27017/myproject';
-var databaseUrl = "mongodb://heroku_6zt1trbj:u6l3fot5u2bv764nrsm03nd6m2@ds123003.mlab.com:23003/heroku_6zt1trbj";
+var databaseUrl = 'mongodb://localhost:27017/myproject';
+// var databaseUrl = "mongodb://heroku_6zt1trbj:u6l3fot5u2bv764nrsm03nd6m2@ds123003.mlab.com:23003/heroku_6zt1trbj";
 var collections = ["scrapedData", "comments"];
 var db = mongojs(databaseUrl, collections);
 db.on("error", function(error) {
@@ -87,28 +87,24 @@ app.get("/scrape", function (req, res) {
                 res.send(response);
             }})});
             
-
-        //   db.getCollection('users').aggregate([
-        //     {$match : {admin : 1}},
-        //     {$lookup: {from: "posts",localField: "_id",foreignField: "owner_id",as: "posts"}},
-        //     {$project : {
-        //             posts : { $filter : {input : "$posts"  , as : "post", cond : { $eq : ['$$post.via' , 'facebook'] } } },
-        //             admin : 1
-        
-        //         }}
-        
-        // ])
-
-          // db.scrapedData.find({"_id": db.ObjectId(req.body.chatId)},
-          // function(err, response) {
-          //   if(err){
-          //     console.log(err);
-          //   } else {  
-          //     console.log("Found article Document!");
-          //     console.log(response);
-          //     res.send(response);
-          //   }
-          // })}); 
+            app.post("/updateComments", function(req, res){
+              console.log("Chat ID: " + JSON.stringify(req.body.chatId));
+              db.scrapedData.aggregate([
+                { $project: { _id: 1, headline: 1 } },
+                { $match: { _id: db.ObjectId(req.body.chatId) } },
+                { $addFields: { artId: { "$toString": "$_id" }}},
+                { $lookup: {
+                  from: "comments",
+                  localField: "artId",
+                  foreignField: "articleId",
+                  as: "comments",
+                }}], function(err, response) {
+                 if (err) {
+                    console.log(err);
+                 } else {
+                    console.log(response);
+                    res.send(response);
+                }})});
 
           app.post("/post", function(req, res) {
             let { body } = req;
@@ -120,6 +116,7 @@ app.get("/scrape", function (req, res) {
               if(err) {
                 console.log(err); 
               } else {
+                console.log(response);
                 res.send(response);
               }
             }}); 
