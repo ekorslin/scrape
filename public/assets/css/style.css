@@ -52,3 +52,18 @@ h4 {
     cursor: pointer;
 }
 
+.comments {
+    height: 110px;
+    /* overflow: auto; */
+    overflow-y:scroll;
+}
+
+#firstname {
+    width: 400px;
+    margin-left: 0 auto;
+}
+
+#comment {
+    width: 800px;
+    margin: 0 auto;
+}
