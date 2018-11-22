@@ -47,12 +47,14 @@
 
 <!-- The Modal -->
 <div id="myModal" class="modal">
-  <div class="modal-content">
-    <span class="close">&times;</span>
-    <h4 id="modal-headline"></h4>
+        <div class="modal-content">
+    
+   
+    <h4 id="modal-headline"></h4><span class="close">x
+    </span>
     Share your thoughts w/ Chicago!
     <div class="card comments">
-    <ul class="commentList"></ul>
+    <ul id="commentList" class="commentList"></ul>
     </div>
     <form id="modal-form">
       First name:<br>
@@ -98,6 +100,8 @@ window.onclick = function(event) {
         modal.style.display = "none";
     }
 }
+
+
 
  $(".chat-button").click(function(event) {
          var modal = document.getElementById('myModal');
