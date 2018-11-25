@@ -125,7 +125,8 @@ window.onclick = function(event) {
               objDiv.scrollTop = objDiv.scrollHeight;
               console.log("Modal should now be appearing in browser");
     }).catch(function (error) {
-        console.log("Something's not working");
+        console.log("Something's not working...")
+        console.log(error);
     })});
 
     $(".submit-button").click(function(event) {
