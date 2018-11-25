@@ -9,8 +9,8 @@ app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
-var databaseUrl = 'mongodb://localhost:27017/myproject';
-// var databaseUrl = "mongodb://heroku_6zt1trbj:u6l3fot5u2bv764nrsm03nd6m2@ds123003.mlab.com:23003/heroku_6zt1trbj";
+// var databaseUrl = 'mongodb://localhost:27017/myproject';
+var databaseUrl = "mongodb://heroku_6zt1trbj:u6l3fot5u2bv764nrsm03nd6m2@ds123003.mlab.com:23003/heroku_6zt1trbj";
 var collections = ["scrapedData", "comments"];
 var db = mongojs(databaseUrl, collections);
 db.on("error", function(error) {
