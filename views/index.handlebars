@@ -53,7 +53,7 @@
     <h4 id="modal-headline"></h4><span class="close">x
     </span>
     Share your thoughts w/ Chicago!
-    <div class="card comments">
+    <div id="comments" class="card comments">
     <ul id="commentList" class="commentList"></ul>
     </div>
     <form id="modal-form">
@@ -121,6 +121,8 @@ window.onclick = function(event) {
               };
               var modal = document.getElementById('myModal');
               modal.style.display = "block";
+              var objDiv = document.getElementById("comments");
+              objDiv.scrollTop = objDiv.scrollHeight;
               console.log("Modal should now be appearing in browser");
     }).catch(function (error) {
         console.log("Something's not working");
@@ -135,11 +137,13 @@ window.onclick = function(event) {
           message: $(".post").val(),
           articleId: $("#modal-headline").attr("value"),
           complete: function(){
+            $(".commentList").append("<li>" + $("#firstname").val() + ": " + $("#comment").val() + "</li>" );
             $("#firstname").val('');
-            $("#comment").val('');              
+            $("#comment").val('');   
+            var objDiv = document.getElementById("comments");
+            objDiv.scrollTop = objDiv.scrollHeight;           
             }
         }}).then(function (response) {
-          getComments();
           console.log(response);
         }).catch(function (error) {
           console.log(error);
