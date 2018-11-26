@@ -72,16 +72,19 @@ app.get("/scrape", function (req, res) {
         app.post("/comments", function(req, res){
           console.log("Chat ID: " + JSON.stringify(req.body.chatId));
           uId = ObjectId(JSON.stringify(req.body.chatId))
-          db.scrapedData.aggregate([
-            { $project: { _id: 1, headline: 1 } },
-            { $match: {_id: uId } },
-            { $addFields: { artId: { "$toString": "$_id" }}},
-            { $lookup: {
-              from: "comments",
-              localField: "artId",
-              foreignField: "articleId",
-              as: "comments",
-            }}], function(err, response) {
+          db.scrapedData.find(
+            { "_id": db.ObjectId(req.body.chatId)}
+            // [
+            // { $project: { _id: 1, headline: 1 } },
+            // { $match: {_id: uId } },
+            // { $addFields: { artId: { "$toString": "$_id" }}},
+            // { $lookup: {
+            //   from: "comments",
+            //   localField: "artId",
+            //   foreignField: "articleId",
+            //   as: "comments",
+            // }}]
+            , function(err, response) {
              if (err) {
                 console.log(err);
              } else {
