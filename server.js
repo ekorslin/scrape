@@ -76,13 +76,13 @@ app.get("/scrape", function (req, res) {
             [
             { $project: { _id: 1, headline: 1 } },
             // { $match: {_id: db.ObjectId(req.body.chatId) } },
-            { $match: {_id: JSON.stringify(req.body.chatId) } },
+            { $match: {_id: db.ObjectId(req.body.chatId) } },
             // { "$addFields": { "artId": { "$toString": "$_id" }}},
             // { $addFields: { artId: { "$toString": "articleId" }}},
-            { $addFields: { artId: { "$toString": "$_id" }}},
+            // { $addFields: { artId: { "$toString": "$_id" }}},
             { $lookup: {
               from: "comments",
-              localField: "artId",
+              localField: "_id",
               foreignField: "articleId",
               as: "comments",
             }}]
