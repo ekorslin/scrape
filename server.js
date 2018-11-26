@@ -77,11 +77,11 @@ app.get("/scrape", function (req, res) {
             { $project: { _id: 1, headline: 1 } },
             { $match: {_id: db.ObjectId(req.body.chatId) } },
             // { $addFields: { artId: { "$toString": "$_id" }}},
-            { $addFields: { artId: { "$toString": "articleId" }}},
+            // { $addFields: { artId: { "$toString": "articleId" }}},
             { $lookup: {
               from: "comments",
               localField: "_id",
-              foreignField: "artId",
+              foreignField: "articleId",
               as: "comments",
             }}]
             , function(err, response) {
