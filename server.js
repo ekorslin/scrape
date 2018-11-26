@@ -75,6 +75,7 @@ app.get("/scrape", function (req, res) {
             // { _id: db.ObjectId(req.body.chatId)}
             [
             { $project: { _id: 1, headline: 1 } },
+            // { $match: {_id: db.ObjectId(req.body.chatId) } },
             { $match: {_id: db.ObjectId(req.body.chatId) } },
             // { "$addFields": { "artId": { "$toString": "$_id" }}},
             // { $addFields: { artId: { "$toString": "articleId" }}},
