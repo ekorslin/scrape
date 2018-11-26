@@ -74,7 +74,7 @@ app.get("/scrape", function (req, res) {
           uId = ObjectId(JSON.stringify(req.body.chatId))
           db.scrapedData.aggregate([
             { $project: { _id: 1, headline: 1 } },
-            { $match: {"_id": uId } },
+            { $match: {_id: uId } },
             { $addFields: { artId: { "$toString": "$_id" }}},
             { $lookup: {
               from: "comments",
