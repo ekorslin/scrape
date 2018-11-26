@@ -70,9 +70,10 @@ app.get("/scrape", function (req, res) {
         
         app.post("/comments", function(req, res){
           console.log("Chat ID: " + JSON.stringify(req.body.chatId));
+          uId = ObjectId(JSON.stringify(req.body.chatId))
           db.scrapedData.aggregate([
             { $project: { _id: 1, headline: 1 } },
-            { $match: { _id: ObjectId(req.body.chatId) } },
+            { $match: { _id: uId } },
             { $addFields: { artId: { "$toString": "$_id" }}},
             { $lookup: {
               from: "comments",
