@@ -5,6 +5,7 @@ var request = require("request");
 var mongojs = require("mongojs");
 var exphbs = require("express-handlebars");
 var app = express();
+var ObjectId = require('mongodb').ObjectID;
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 app.use(express.static("public"));
@@ -70,7 +71,7 @@ app.get("/scrape", function (req, res) {
         
         app.post("/comments", function(req, res){
           console.log("Chat ID: " + JSON.stringify(req.body.chatId));
-          uId = db.ObjectId(JSON.stringify(req.body.chatId))
+          uId = ObjectId(JSON.stringify(req.body.chatId))
           db.scrapedData.aggregate([
             { $project: { _id: 1, headline: 1 } },
             { $match: {"_id": uId } },
