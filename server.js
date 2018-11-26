@@ -80,10 +80,11 @@ app.get("/scrape", function (req, res) {
             // { "$addFields": { "artId": { "$toString": "$_id" }}},
             // { $addFields: { artId: { "$toString": "articleId" }}},
             // { $addFields: { artId: { "$toString": "$_id" }}},
+            { $addFields: { "artId": { "$toObjectId": "$articleId" }}},
             { $lookup: {
               from: "comments",
               localField: "_id",
-              foreignField: "articleId",
+              foreignField: "artId",
               as: "comments",
             }}]
             , function(err, response) {
