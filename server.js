@@ -75,6 +75,7 @@ app.get("/scrape", function (req, res) {
             // { _id: db.ObjectId(req.body.chatId)}
             [
             { $project: { _id: 1, headline: 1 } },
+            { "$addFields": { "convertedId": { "$toObjectId": "$articleId" }}},
             // { $match: {_id: db.ObjectId(req.body.chatId) } },
             { $match: {_id: db.ObjectId(req.body.chatId) } },
             // { "$addFields": { "artId": { "$toString": "$_id" }}},
@@ -85,7 +86,7 @@ app.get("/scrape", function (req, res) {
             { $lookup: {
               from: "comments",
               localField: "_id",
-              foreignField: "articleId",
+              foreignField: "convertedId",
               as: "comments",
             }}]
             , function(err, response) {
