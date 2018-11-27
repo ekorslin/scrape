@@ -84,7 +84,7 @@ app.get("/scrape", function (req, res) {
             // { $addFields: { convertedId: { $toObjectId: "$articleId" }}},
             { $lookup: {
               from: "comments",
-              localField: "_id",
+              localField: "_id.str",
               foreignField: "articleId",
               as: "comments",
             }}]
