@@ -80,12 +80,11 @@ app.get("/scrape", function (req, res) {
             { $match: {_id: db.ObjectId(req.body.chatId) } },
             // { "$addFields": { "artId": { "$toString": "$_id" }}},
             // { $addFields: { artId: { "$toString": "articleId" }}},
-            { $addFields: { artId: { "$toString": "$_id" }}},
             // { "$addFields": { "artId": { "$toObjectId": "$articleId" }}},
             // { $addFields: { convertedId: { $toObjectId: "$articleId" }}},
             { $lookup: {
               from: "comments",
-              localField: "artId",
+              localField: "_id",
               foreignField: "articleId",
               as: "comments",
             }}]
