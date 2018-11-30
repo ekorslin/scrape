@@ -5,13 +5,14 @@ var request = require("request");
 var mongojs = require("mongojs");
 var exphbs = require("express-handlebars");
 var app = express();
-var ObjectId = require('mongodb').ObjectID;
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
-// var databaseUrl = 'mongodb://localhost:27017/myproject';
-var databaseUrl = "mongodb://heroku_6zt1trbj:u6l3fot5u2bv764nrsm03nd6m2@ds123003.mlab.com:23003/heroku_6zt1trbj";
+
+
+var databaseUrl = "mongodb://ekorslin:Cubs2016!@tribune-shard-00-00-vxwmm.mongodb.net:27017,tribune-shard-00-01-vxwmm.mongodb.net:27017,tribune-shard-00-02-vxwmm.mongodb.net:27017/test?ssl=true&replicaSet=Tribune-shard-0&authSource=admin&retryWrites=true";
+
 var collections = ["scrapedData", "comments"];
 var db = mongojs(databaseUrl, collections);
 db.on("error", function(error) {
@@ -71,24 +72,16 @@ app.get("/scrape", function (req, res) {
         
         app.post("/comments", function(req, res){
           console.log("Chat ID: " + JSON.stringify(req.body.chatId));
-          db.scrapedData.aggregate(
-            // { _id: db.ObjectId(req.body.chatId)}
-            [
+          db.scrapedData.aggregate([
             { $project: { _id: 1, headline: 1 } },
-            // { $addFields: { convertedId: { "$toObjectId": "$articleId" }}},
-            // { $match: {_id: db.ObjectId(req.body.chatId) } },
-            { $match: {_id: db.ObjectId(req.body.chatId) } },
-            // { "$addFields": { "artId": { "$toString": "$_id" }}},
-            // { $addFields: { artId: { "$toString": "articleId" }}},
-            // { "$addFields": { "artId": { "$toObjectId": "$articleId" }}},
-            // { $addFields: { convertedId: { $toObjectId: "$articleId" }}},
+            { $match: { _id: db.ObjectId(req.body.chatId) } },
+            { $addFields: { artId: { "$toString": "$_id" }}},
             { $lookup: {
               from: "comments",
-              localField: "_id.str",
+              localField: "artId",
               foreignField: "articleId",
               as: "comments",
-            }}]
-            , function(err, response) {
+            }}], function(err, response) {
              if (err) {
                 console.log(err);
              } else {
